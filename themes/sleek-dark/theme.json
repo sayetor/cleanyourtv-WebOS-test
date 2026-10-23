@@ -1,0 +1,5 @@
+{ "name": "Sleek Dark", "author": "Ben", "extends": "sleek", "description": "Sleek with a dark background: the same layout and lift, for evenings and OLED screens.",
+  "colors": { "night": "#0b0b0d", "panel": "#1c1c1e", "ink": "#f5f5f7", "accent": "#f5f5f7", "pill": "#ffffff" },
+  "surface": { "pillAlpha": 0.1 },
+  "tile": { "shadow": 0.7 },
+  "effects": { "glow": 0.7 } }

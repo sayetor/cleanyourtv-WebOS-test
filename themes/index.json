@@ -44,6 +44,20 @@
    "preview": "oled/preview.jpg"
   },
   {
+   "id": "sleek",
+   "name": "Sleek",
+   "author": "Ben",
+   "description": "Light and airy: wide rounded tiles that lift with a soft shadow, no focus outline, icon-only buttons.",
+   "preview": "sleek/preview.jpg"
+  },
+  {
+   "id": "sleek-dark",
+   "name": "Sleek Dark",
+   "author": "Ben",
+   "description": "Sleek with a dark background: the same layout and lift, for evenings and OLED screens.",
+   "preview": "sleek-dark/preview.jpg"
+  },
+  {
    "id": "still",
    "name": "Still",
    "author": "CleanYourTV",

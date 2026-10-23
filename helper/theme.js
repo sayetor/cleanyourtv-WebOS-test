@@ -95,6 +95,7 @@ const SCHEMA = [
   ['tile.border', 'num', [0, 0.6], 0, 'Opacity of a thin outline on every tile.'],
   ['tile.ringWidth', 'int', [0, 10], 4, 'Width of the focus ring, in px; 0 for none.'],
   ['tile.ringOffset', 'int', [0, 14], 4, 'Space between a tile and its focus ring, in px.'],
+  ['tile.shadow', 'num', [0, 1], 0.6, 'Opacity of the shadow under the focused tile; lower it for a light background.'],
   ['effects.glow', 'num', [0, 1], 1, 'Strength of the ambient glow at the top.'],
   ['effects.glowColor', 'enum', ['app', 'accent'], 'app', '`app`: taken from the focused icon; `accent`: the accent colour.'],
   ['effects.speed', 'num', [0, 2], 1, 'Animation speed multiplier; 0 switches the animations off.'],
@@ -230,7 +231,7 @@ function resolve(t, accent) {
     '--dock-panel': String(v['dock.panel']), '--dock-pad': px(pad), '--dock-lift': px(-v['dock.lift']), '--dock-fs': String(v['dock.focusScale']),
     '--cols': String(v['grid.cols']), '--tile-h': px(v['grid.tileH']), '--gap-x': px(v['grid.gapX']), '--gap-y': px(v['grid.gapY']), '--tile-r': px(v['grid.radius']), '--grid-l': px(v['grid.x']), '--grid-w': px(v['grid.width']),
     '--grid-t': px(gridY - viewTop), '--tile-w': px(Math.floor((v['grid.width'] - (v['grid.cols'] - 1) * v['grid.gapX']) / v['grid.cols'])), '--grid-fs': String(v['grid.focusScale']), '--ov-dim': String(v['grid.overlayDim']),
-    '--gloss': String(v['tile.gloss']), '--tile-border': String(v['tile.border']), '--ring-w': px(v['tile.ringWidth']), '--ring-off': px(v['tile.ringOffset']),
+    '--gloss': String(v['tile.gloss']), '--tile-border': String(v['tile.border']), '--ring-w': px(v['tile.ringWidth']), '--ring-off': px(v['tile.ringOffset']), '--shadow': String(v['tile.shadow']), '--ink-rgb': ink.join(','),
     '--glow-op': String(v['effects.glow']), '--spd': String(v['effects.speed']),
   };
   const w = v['effects.wallpaper'];

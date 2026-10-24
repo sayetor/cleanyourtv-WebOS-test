@@ -16,7 +16,7 @@ const files = fs.readdirSync(helper).filter(f => /\.js$/.test(f)).map(f => path.
 for (const f of files) { const r = cp.spawnSync(process.execPath, ['--check', f], { encoding: 'utf8' }); ok(r.status === 0, 'syntax ' + path.relative(root, f) + (r.status ? '\n' + r.stderr : '')); }
 
 // 2. modules load (helper.js starts the service, so it is only parsed above)
-for (const m of ['netcompat', 'notify', 'notifyapi', 'sharelog', 'picker', 'inputhook', 'manager', 'live', 'voice', 'theme']) { try { require(path.join(helper, m)); ok(true, 'loads ' + m); } catch (e) { ok(false, 'loads ' + m + ': ' + e.message); } }
+for (const m of ['netcompat', 'notify', 'notifyapi', 'sharelog', 'picker', 'inputhook', 'manager', 'live', 'voice', 'theme', 'net']) { try { require(path.join(helper, m)); ok(true, 'loads ' + m); } catch (e) { ok(false, 'loads ' + m + ': ' + e.message); } }
 
 const nc = require(path.join(helper, 'netcompat'));
 const call = (fn, url, method, body) => new Promise((resolve, reject) => {
@@ -216,6 +216,12 @@ const fake = (url, method) => { const res = { code: 0, out: '', writeHead(c) { t
   ok(tlight.v['tile.shadow'] === 0.2 && tsh.v['tile.shadow'] === 1 && themeMod.normalize({}, 'plain').v['tile.shadow'] === 0.6, 'the focus shadow is a theme setting, clamped to 0 to 1, default 0.6');
   const tsleek = themeMod.normalize({ type: { font: 'helvetica' }, dock: { fill: true }, effects: { direction: 500 } }, 'sl'), tno = themeMod.normalize({ dock: { fill: 'yes' }, effects: { direction: -3 } }, 'no');
   ok(tsleek.v['type.font'] === 'helvetica' && tsleek.v['dock.fill'] === true && tsleek.v['effects.direction'] === 60 && tno.v['dock.fill'] === false && tno.v['effects.direction'] === 0, 'the helvetica font, dock.fill and effects.direction are theme settings, checked and clamped');
+  const netm = require(path.join(helper, 'net'));
+  const nw = netm.summarize({ isInternetConnectionAvailable: true, wired: { state: 'disconnected' }, wifi: { state: 'connected', ssid: 'Home', ipAddress: '10.0.0.5', onInternet: 'yes' } });
+  const nb = netm.summarize({ isInternetConnectionAvailable: true, wired: { state: 'connected', ipAddress: '10.0.0.6', onInternet: 'yes' }, wifi: { state: 'connected', ssid: 'Home' } });
+  const ncaf = netm.summarize({ isInternetConnectionAvailable: false, wired: { state: 'disconnected' }, wifi: { state: 'connected', ssid: 'Cafe', onInternet: 'no' } });
+  ok(nw.kind === 'wifi' && nw.ssid === 'Home' && nw.internet && nb.kind === 'wired' && nb.internet && ncaf.kind === 'wifi' && !ncaf.internet && netm.summarize({}).kind === 'none' && netm.summarize(null).kind === 'none', 'network status: Wi-Fi, wired first, no internet, nothing');
+  ok(netm.findAirplay([{ id: 'com.webos.app.home' }, { id: 'com.webos.app.x', title: 'AirPlay & HomeKit' }]).id === 'com.webos.app.x' && netm.findAirplay([{ id: 'a' }]).id === null && netm.findAirplay(undefined).id === null, 'LG\'s AirPlay app is found by its id or title, or reported missing');
   // a stand-in for raw.githubusercontent.com: the repository's folder, plus a few themes that are wrong on purpose
   const tWrong = { kid: JSON.stringify({ name: 'Kid', extends: 'bloom', bar: { style: 'flat' } }), notjson: '{ this is not json', huge: JSON.stringify({ name: 'x'.repeat(40000) }),
     badwall: JSON.stringify({ name: 'Bad wallpaper', effects: { wallpaper: 'w.jpg' } }), orphan: JSON.stringify({ name: 'Orphan', extends: 'missing-base' }) };

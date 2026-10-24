@@ -10,7 +10,9 @@ same on every supported webOS version.
 - **Dock.** Up to four apps, large, on the first row.
 - **Top shelf.** The name of the focused app and an ambient glow taken from its icon.
 - **Grid.** All other apps, sorted by how often you use each one (or A to Z).
-- **Top buttons.** Inputs, Live TV, Settings and Customise, and a clock. The buttons you see are yours to change.
+- **Top buttons.** Inputs, Live TV, Settings, AirPlay, Wi-Fi and Customise, and a clock. The buttons you see are yours to change.
+  **Wi-Fi** shows the connection (Wi-Fi, Ethernet, no internet or offline); OK lists the network, its status and the TV's address,
+  with a shortcut to the network settings. **AirPlay** opens LG's own AirPlay screen and appears only on TVs that have one.
 
 ## Keys
 

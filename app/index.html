@@ -199,15 +199,17 @@ svg.st{width:26px;height:26px;fill:#ffcc4d;flex:none}.crow.f svg.st{fill:#c98a00
 <div id="lv"><div id="lv-stage"></div><div id="lv-spin" class="layer"></div><div id="lv-osd" class="layer"><img class="logo" id="lv-ologo" alt=""><div class="num" id="lv-onum"></div><div class="info"><div class="name" id="lv-oname"></div><div class="now" id="lv-onow"></div><div class="next" id="lv-onext"></div><div class="facts" id="lv-ofacts"></div><div class="pbar"><i id="lv-obar"></i></div></div></div><div id="lv-numin" class="layer"></div><div id="lv-guide" class="layer"><div id="lv-glow"></div><div id="lv-gtop"><div id="lv-gtitle"></div><div id="lv-gtabs"></div><input id="lv-search" type="text" autocomplete="off"><div id="lv-gclock"></div></div><div id="lv-rows"></div><div id="lv-detail"></div></div><div id="lv-filter" class="layer"></div><div id="lv-menu" class="layer"></div><div id="lv-msg" class="layer"></div><div id="lv-tune" class="layer"></div><div id="lv-toast" class="layer"></div><div id="lv-stats" class="layer"></div></div>
 <div id="toast"></div>
 <script>
-var API='http://127.0.0.1:8765', CACHE_KEY='cytv.cache.v4', VERSION='1.4.16';
+var API='http://127.0.0.1:8765', CACHE_KEY='cytv.cache.v4', VERSION='1.4.17';
 var DEFAULTS={
   dock:['netflix','youtube.leanback.v4','amazon','com.disney.disneyplus-prod'],
-  topbar:[{label:'Inputs',icon:'inputs',action:'inputs'},{label:'Live TV',icon:'tv',action:'live'},{label:'Settings',icon:'settings',app:'com.palm.app.settings'}]
+  topbar:[{label:'Inputs',icon:'inputs',action:'inputs'},{label:'Live TV',icon:'tv',action:'live'},{label:'Settings',icon:'settings',app:'com.palm.app.settings'},{label:'AirPlay',icon:'airplay',action:'airplay'},{label:'Wi-Fi',icon:'wifi',action:'network'}]
 };
 var PRESETS=[
   {label:'Inputs',icon:'inputs',action:'inputs'},
   {label:'Settings',icon:'settings',app:'com.palm.app.settings'},
-  {label:'Live TV',icon:'tv',action:'live'}
+  {label:'Live TV',icon:'tv',action:'live'},
+  {label:'Wi-Fi',icon:'wifi',action:'network'},
+  {label:'AirPlay',icon:'airplay',action:'airplay'}
 ];
 var ICONS={
   inputs:'<path d="M15 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/>',
@@ -216,7 +218,12 @@ var ICONS={
   tv:'<rect x="2" y="7" width="20" height="15" rx="2"/><path d="M17 2l-5 5-5-5"/>',
   grid:'<path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/>',
   hdmi:'<path d="M4 8h16v7l-3 3H7l-3-3z"/><path d="M9 11v3M12 11v3M15 11v3"/>',
-  restore:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>'
+  restore:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>',
+  wifi:'<path d="M2 8.5a15 15 0 0 1 20 0"/><path d="M5 12a10.5 10.5 0 0 1 14 0"/><path d="M8.5 15.5a5.5 5.5 0 0 1 7 0"/><path d="M12 19h.01"/>',
+  wifinet:'<path d="M5 12a10.5 10.5 0 0 1 14 0"/><path d="M8.5 15.5a5.5 5.5 0 0 1 7 0"/><path d="M12 19h.01"/><path d="M19 3v5M19 11h.01"/>',
+  wifioff:'<path d="M2 2l20 20"/><path d="M8.5 15.5a5.5 5.5 0 0 1 7 0"/><path d="M5 12a10.5 10.5 0 0 1 4.2-2.4M14.8 9.6A10.5 10.5 0 0 1 19 12"/><path d="M2 8.5a15 15 0 0 1 4.3-2.8M10.5 4.6A15 15 0 0 1 22 8.5"/><path d="M12 19h.01"/>',
+  ethernet:'<rect x="4" y="5" width="16" height="12" rx="2"/><path d="M8 17v3h8v-3M8 9v3M11 9v3M14 9v3M17 9v3" transform="translate(-0.5 0)"/>',
+  airplay:'<path d="M5 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"/><path d="M12 15l5 6H7z"/>'
 };
 function svg(name){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[name]||ICONS.grid)+'</svg>'}
 
@@ -249,7 +256,7 @@ var TXL={nl:{'Live TV':'Live TV','All channels':'Alle zenders','Loading channels
  for(var l in add){TXL[l]=TXL[l]||{};for(var k in add[l])TXL[l][k]=add[l][k]}})();
 function t(k){var d=TX[LANG],l=TXL[LANG];return (d&&d[k])||(l&&l[k])||k}
 /* a button's label: built-in buttons are translated, buttons you added keep the app's own name */
-function barLabel(o){return o.action==='inputs'?t('Inputs'):o.app==='com.palm.app.settings'?t('Settings'):o.action==='customize'?t('Customise'):o.action==='live'?t('Live TV'):(o.label||'')}
+function barLabel(o){return o.action==='network'?netLabel():o.action==='airplay'?'AirPlay':o.action==='inputs'?t('Inputs'):o.app==='com.palm.app.settings'?t('Settings'):o.action==='customize'?t('Customise'):o.action==='live'?t('Live TV'):(o.label||'')}
 function clockOpts(){var c=cfg.clock,o={hour:'numeric',minute:'2-digit'};if(c==='24'){o.hourCycle='h23'}else if(c==='12'){o.hourCycle='h12';o.hour='numeric'}return o}
 
 var apps=[], cfg={}, usage={}, warned=false, rows=[], r=1, c=0, colors={}, tiles={}, lastSig='', gSide=0, gColor='', gT=0, saveT=0;
@@ -414,7 +421,7 @@ function unhideApp(id){cfg.hidden=(cfg.hidden||[]).filter(function(i){return i!=
 function topbar(){return cfg.topbar?cfg.topbar:DEFAULTS.topbar}
 /* Live TV is optional (manager > Live TV): off hides every entry, the saved layout is kept for when it is switched on again */
 function liveOn(){return !(cfg.options&&cfg.options.liveTv===false)}
-function shownBar(){return liveOn()?topbar():topbar().filter(function(o){return o.action!=='live'})}
+function shownBar(){return topbar().filter(function(o){return (o.action!=='live'||liveOn())&&(o.action!=='airplay'||!!AIR.id)})}
 function byOrder(a,b){
   if(cfg.sort!=='alpha'){var d=(usage[b.id]||0)-(usage[a.id]||0);if(Math.abs(d)>1e-9)return d>0?1:-1}
   return a.title.localeCompare(b.title)}
@@ -430,6 +437,8 @@ function act(e){
   if(o.action==='customize')return customizeMenu();
   if(o.action==='live')return LIVE.enter();
   if(o.action==='inputs')return inputsMenu();
+  if(o.action==='network')return netMenu();
+  if(o.action==='airplay'){if(AIR.id)launch(AIR.id);return}
   if(o.app)launch(o.app,o.params)}
 
 /* ---------- menus ---------- */
@@ -516,12 +525,26 @@ function themeMenu(){
 function setThemeHome(th){
   toast(th.installed?th.name:t('Downloading')+' '+th.name+'...');
   api('/api/theme/set',{id:th.id}).then(function(x){if(x.error){toast(x.error);return}themeName=th.name;lastSig='';load()}).catch(function(){toast(t('The service did not answer'))})}
+/* ---------- Wi-Fi and AirPlay buttons: the service reads the connection manager and finds LG's own AirPlay app ---------- */
+var NET={kind:'',ssid:'',internet:true,ip:''},AIR={id:null},NET_TARGET='Network';
+function netIcon(){return NET.kind==='wired'?'ethernet':NET.kind==='none'?'wifioff':(NET.kind==='wifi'&&!NET.internet)?'wifinet':'wifi'}
+function netLabel(){return NET.kind==='wired'?t('Ethernet'):NET.kind==='none'?t('Offline'):NET.ssid||'Wi-Fi'}
+function netRefresh(){
+  api('/api/net').then(function(x){if(!x||!x.kind)return;var was=netIcon()+'|'+netLabel();NET=x;if(netIcon()+'|'+netLabel()!==was&&!stack.length)rebuild()}).catch(function(){});
+  api('/api/airplay').then(function(x){var had=!!AIR.id;AIR=x||{id:null};if(had!==!!AIR.id&&!stack.length)rebuild()}).catch(function(){})}
+setInterval(netRefresh,30000);
+function netMenu(){
+  var head=NET.kind==='wired'?t('Ethernet'):NET.kind==='wifi'?(NET.ssid||'Wi-Fi'):NET.kind==='none'?t('Not connected'):t('Network');
+  var items=[{icon:netIcon(),label:head,sub:NET.kind==='none'?'':(NET.internet?t('Connected'):t('No internet')),stay:true}];
+  if(NET.ip)items.push({label:t('IP address'),sub:NET.ip,stay:true});
+  items.push({icon:'settings',label:t('Network settings'),fn:function(){launch('com.palm.app.settings',{target:NET_TARGET})}});
+  openMenu(NET.kind==='wired'?t('Ethernet'):'Wi-Fi',items);stack[stack.length-1].idx=items.length-1;drawMenu()}
 function topButtonsMenu(){
   var items=shownBar().map(function(o){return {label:barLabel(o),sub:t('OK to remove'),fn:function(){removeButton(o)}}});
   items.push({label:t('Add a button...'),stay:true,fn:addButtonMenu});
   openMenu(t('Top buttons'),items)}
 function addButtonMenu(){
-  var items=PRESETS.filter(function(p){return liveOn()||p.action!=='live'}).map(function(p){return {icon:p.icon,label:barLabel(p),fn:function(){cfg.topbar=topbar().concat([p]);saveCfg()}}});
+  var items=PRESETS.filter(function(p){return (liveOn()||p.action!=='live')&&(p.action!=='airplay'||!!AIR.id)}).map(function(p){return {icon:p.icon,label:barLabel(p),fn:function(){cfg.topbar=topbar().concat([p]);saveCfg()}}});
   items.push({label:t('An app...'),stay:true,fn:function(){
     openMenu(t('Pick an app'),apps.slice().sort(function(a,b){return a.title.localeCompare(b.title)}).map(function(a){
       return {label:a.title,fn:function(){cfg.topbar=topbar().concat([{label:a.title,icon:'grid',app:a.id}]);saveCfg()}}}))}});
@@ -543,7 +566,7 @@ function rebuild(){
   var d=dock.map(function(a){var t=tile(a);dk.appendChild(t);fit(t,true);return t});
   var g=rest.map(function(a){var t=tile(a);gd.appendChild(t);fit(t,false);return t});
   var tb=shownBar().concat([{label:'Customise',icon:'edit',action:'customize',fixed:true}]).map(function(o){
-    var p=document.createElement('div');p.className='pill';p._o=o;p.innerHTML=svg(o.icon)+'<span></span>';p.lastChild.textContent=barLabel(o);
+    var p=document.createElement('div');p.className='pill';p._o=o;p.innerHTML=svg(o.action==='network'?netIcon():o.icon)+'<span></span>';p.lastChild.textContent=barLabel(o);
     hit(p);bar.appendChild(p);return p});
   rows=[tb,d.length?d:tb];
   for(var i=0;i<g.length;i+=TH.cols)rows.push(g.slice(i,i+TH.cols));
@@ -551,7 +574,7 @@ function rebuild(){
   if(keep&&tiles[keep]){var p=posOf(tiles[keep]);if(p){nr=p[0];nc=p[1]}}
   setFocus(nr,nc,true)}
 
-function load(){api('/api/apps').then(function(x){
+function load(){netRefresh();api('/api/apps').then(function(x){
   if(x.version&&oldSvc(x.version)&&!warned){warned=true;toast('The service ('+x.version+') is older than this launcher needs: update it in the CleanYourTV manager')}
   usage=x.usage||{};
   var rank=Object.keys(usage).sort(function(a,b){return usage[b]-usage[a]});

@@ -214,6 +214,8 @@ const fake = (url, method) => { const res = { code: 0, out: '', writeHead(c) { t
   ok(tkid.v['grid.cols'] === 7 && tkid.v['dock.count'] === 6 && tkid.v['bar.style'] === 'round', 'a theme that extends another keeps its values where its own are missing or invalid');
   const tlight = themeMod.normalize({ colors: { ink: '#1d1d1f' }, tile: { shadow: 0.2 } }, 'light'), tsh = themeMod.normalize({ tile: { shadow: 9 } }, 'sh');
   ok(tlight.v['tile.shadow'] === 0.2 && tsh.v['tile.shadow'] === 1 && themeMod.normalize({}, 'plain').v['tile.shadow'] === 0.6, 'the focus shadow is a theme setting, clamped to 0 to 1, default 0.6');
+  const tsleek = themeMod.normalize({ type: { font: 'helvetica' }, dock: { fill: true }, effects: { direction: 500 } }, 'sl'), tno = themeMod.normalize({ dock: { fill: 'yes' }, effects: { direction: -3 } }, 'no');
+  ok(tsleek.v['type.font'] === 'helvetica' && tsleek.v['dock.fill'] === true && tsleek.v['effects.direction'] === 60 && tno.v['dock.fill'] === false && tno.v['effects.direction'] === 0, 'the helvetica font, dock.fill and effects.direction are theme settings, checked and clamped');
   // a stand-in for raw.githubusercontent.com: the repository's folder, plus a few themes that are wrong on purpose
   const tWrong = { kid: JSON.stringify({ name: 'Kid', extends: 'bloom', bar: { style: 'flat' } }), notjson: '{ this is not json', huge: JSON.stringify({ name: 'x'.repeat(40000) }),
     badwall: JSON.stringify({ name: 'Bad wallpaper', effects: { wallpaper: 'w.jpg' } }), orphan: JSON.stringify({ name: 'Orphan', extends: 'missing-base' }) };

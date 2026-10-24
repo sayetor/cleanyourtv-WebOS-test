@@ -1,10 +1,67 @@
-{ "name": "Sleek", "author": "Ben", "description": "Light and airy: wide rounded tiles that lift with a soft shadow, no focus outline, icon-only buttons.",
-  "colors": { "night": "#eceef2", "panel": "#ffffff", "ink": "#1d1d1f", "accent": "#1d1d1f", "pill": "#000000" },
-  "surface": { "pillAlpha": 0.06, "pillRing": 0, "menuAlpha": 0.96, "rowRadius": 22 },
-  "clock": { "scale": 0.72, "dateScale": 0.85, "y": 62 },
-  "bar": { "style": "round", "size": 60, "gap": 14, "y": 62 },
-  "shelf": { "scale": 0.6, "y": 160 },
-  "dock": { "align": "center", "x": 0, "count": 5, "w": 320, "h": 192, "gap": 40, "radius": 28, "lift": 14, "focusScale": 1.1 },
-  "grid": { "align": "center", "cols": 5, "x": 80, "width": 1760, "tileH": 192, "gapX": 40, "gapY": 44, "radius": 26, "focusScale": 1.12 },
-  "tile": { "gloss": 0.35, "ringWidth": 0, "shadow": 0.22 },
-  "effects": { "glow": 0.55 } }
+{
+ "name": "Sleek",
+ "author": "Ben",
+ "description": "Light and airy in a Helvetica-style font: wide rounded tiles, the focused top-row app grows to fill the space under its name, and focus slides from tile to tile.",
+ "colors": {
+  "night": "#eceef2",
+  "panel": "#ffffff",
+  "ink": "#1d1d1f",
+  "accent": "#1d1d1f",
+  "pill": "#000000"
+ },
+ "surface": {
+  "pillAlpha": 0.06,
+  "pillRing": 0,
+  "menuAlpha": 0.96,
+  "rowRadius": 22
+ },
+ "clock": {
+  "scale": 0.72,
+  "dateScale": 0.85,
+  "y": 62
+ },
+ "bar": {
+  "style": "round",
+  "size": 60,
+  "gap": 14,
+  "y": 62
+ },
+ "shelf": {
+  "scale": 0.6,
+  "y": 160
+ },
+ "dock": {
+  "align": "center",
+  "x": 0,
+  "y": 310,
+  "count": 5,
+  "w": 300,
+  "h": 180,
+  "gap": 40,
+  "radius": 28,
+  "fill": true
+ },
+ "grid": {
+  "align": "center",
+  "cols": 5,
+  "x": 130,
+  "width": 1660,
+  "tileH": 180,
+  "gapX": 40,
+  "gapY": 44,
+  "radius": 26,
+  "focusScale": 1.12
+ },
+ "tile": {
+  "gloss": 0.35,
+  "ringWidth": 0,
+  "shadow": 0.22
+ },
+ "effects": {
+  "glow": 0.55,
+  "direction": 24
+ },
+ "type": {
+  "font": "helvetica"
+ }
+}

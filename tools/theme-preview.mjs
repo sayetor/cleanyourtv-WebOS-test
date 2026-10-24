@@ -34,6 +34,8 @@ const srv = http.createServer(async (q, r) => {
   if (q.method === 'OPTIONS') { r.writeHead(204); return r.end(); }
   const j = o => { r.writeHead(200, { 'content-type': 'application/json' }); r.end(JSON.stringify(o)); };
   if (u === '/home.html') { r.writeHead(200, { 'content-type': 'text/html' }); return r.end(page); }
+  const af = /^\/([\w-]+\.woff2)$/.exec(u);   // the launcher's own font files, next to the page as on the TV
+  if (af && fs.existsSync(path.join(ROOT, 'app', af[1]))) { r.writeHead(200, { 'content-type': 'font/woff2' }); return r.end(fs.readFileSync(path.join(ROOT, 'app', af[1]))); }
   if (u.startsWith('/api/theme/')) return theme.handle(q, r, u, body);
   if (u === '/api/apps') return j({ apps: apps.map(a => ({ id: a.id, title: a.title })), config: { dock: apps.slice(0, 6).map(a => a.id), theme: theme.resolved() }, usage: Object.fromEntries(apps.map((a, i) => [a.id, 1000 - i])), version: '9.9.9' });
   if (u === '/api/inputs') return j({ devices: [{ hdmiPlugIn: true, label: 'Game console', port: 1, appId: 'hdmi1', activate: false }, { hdmiPlugIn: false, label: 'HDMI 2', port: 2, appId: 'hdmi2', activate: false }] });

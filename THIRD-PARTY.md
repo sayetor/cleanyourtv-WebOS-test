@@ -43,6 +43,13 @@ Kazuhiko Arase, unmodified (npm package `qrcode-generator@1.4.4`, SHA-256 of the
 `18ae399f81182bc9de916e9c77b195df20cc58d6f2d55a62b085a299f1bf1780`), licensed under the MIT license (the notice is in
 the file header). The manager app loads it to draw the QR code.
 
+## Sleek Sans (the launcher's "helvetica" font)
+
+`app/sleek-sans-regular.woff2` and `app/sleek-sans-bold.woff2` are a modified version of TeX Gyre Heros 2.004 by Bogusław
+Jackowski and Janusz M. Nowacki, under the GUST Font License (LPPL 1.3c or later). They were reduced to Latin characters, converted
+to WOFF2 and renamed Sleek Sans, as that licence requests. The notice is in `app/sleek-sans-LICENSE.txt`; the originals are at
+[GUST e-foundry](http://www.gust.org.pl/projects/e-foundry/tex-gyre/) and [CTAN](https://ctan.org/pkg/tex-gyre-heros).
+
 ## Design
 
 The home-screen design follows the Android TV project [CleanYourTV](https://github.com/Gathin23/cleanyourtv) (MIT).

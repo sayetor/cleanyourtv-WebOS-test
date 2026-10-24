@@ -47,7 +47,7 @@
    "id": "sleek",
    "name": "Sleek",
    "author": "Ben",
-   "description": "Light and airy: wide rounded tiles that lift with a soft shadow, no focus outline, icon-only buttons.",
+   "description": "Light and airy in a Helvetica-style font: wide rounded tiles, the focused top-row app grows to fill the space under its name, and focus slides from tile to tile.",
    "preview": "sleek/preview.jpg"
   },
   {

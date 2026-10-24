@@ -33,6 +33,7 @@ The Magic Remote pointer works too: pointing and clicking, and holding the butto
 
 **Customise** holds:
 
+- the **theme** (the same list as in the manager app; a theme that is not on the TV yet is downloaded when you choose it),
 - the **top buttons** (add Inputs, Settings, Live TV or any app, or remove one),
 - **hidden apps** (show them again),
 - the **app order** (most used first, or A to Z),
@@ -64,7 +65,7 @@ Menus follow the TV's language: English, Dutch, German, French and Spanish.
 ## Themes
 
 The look of the home screen (colours, tile and text size, columns, clock, glow, animation speed, wallpaper) is a [theme](themes.md),
-chosen in the manager app.
+chosen in the manager app or in **Customise** > **Theme** on the home screen.
 
 ## Settings file
 

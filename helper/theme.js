@@ -38,7 +38,7 @@ const SCHEMA = [
   ['surface.pillRadius', 'int', [0, 60], 32, 'Corner radius of the top buttons (pill style only).'],
   ['surface.menuAlpha', 'num', [0.5, 1], 0.97, 'Opacity of the dark layer behind menus.'],
   ['surface.rowRadius', 'int', [0, 50], 30, 'Corner radius of menu rows.'],
-  ['type.font', 'enum', ['default', 'serif', 'mono'], 'default', 'The typeface: the TV\'s own, a serif or a monospace.'],
+  ['type.font', 'enum', ['default', 'serif', 'mono', 'helvetica'], 'default', 'The typeface: the TV\'s own, a serif, a monospace or `helvetica` (Sleek Sans, a Helvetica-style font that comes with the launcher).'],
   ['type.scale', 'num', [0.8, 1.3], 1, 'Scale of the text of buttons, menus and tiles.'],
   ['clock.show', 'bool', null, true, 'Show the clock.'],
   ['clock.date', 'bool', null, true, 'Show the date beside or under the time.'],
@@ -76,6 +76,7 @@ const SCHEMA = [
   ['dock.panelPad', 'int', [0, 60], 24, 'Space between the panel and the tiles, in px.'],
   ['dock.lift', 'int', [0, 40], 10, 'How far the focused dock tile rises, in px.'],
   ['dock.focusScale', 'num', [1, 1.3], 1.05, 'Scale of the focused dock tile.'],
+  ['dock.fill', 'bool', null, false, 'The focused dock tile grows from its bottom edge up to just under the app name, and the tiles beside it move aside; `dock.focusScale` and `dock.lift` are then not used.'],
   ['grid.mode', 'enum', ['below', 'push', 'overlay'], 'below', '`below`: the grid sits under the dock and scrolls (a dock at the bottom behaves as `push`); `push`: the grid sits under the dock out of sight, and when the focus moves down into it the dock moves up to `grid.dockUp` and the grid appears below it; `overlay`: the grid opens over the screen above the dock.'],
   ['grid.dockUp', 'int', [0, 700], 220, '`push` mode: where the dock stops, counted from the top of the screen, while the grid has the focus, in px.'],
   ['grid.align', 'enum', ['left', 'center'], 'left', '`center` centres every row of tiles, also a last row that is not full.'],
@@ -99,6 +100,7 @@ const SCHEMA = [
   ['effects.glow', 'num', [0, 1], 1, 'Strength of the ambient glow at the top.'],
   ['effects.glowColor', 'enum', ['app', 'accent'], 'app', '`app`: taken from the focused icon; `accent`: the accent colour.'],
   ['effects.speed', 'num', [0, 2], 1, 'Animation speed multiplier; 0 switches the animations off.'],
+  ['effects.direction', 'int', [0, 60], 0, 'Directional focus: the newly focused tile slides in this far, in px, from the side the focus came from, and the tile it left leans after it; 0 for none.'],
   ['effects.wallpaper', 'file', null, '', 'A file name in `themes/wallpapers/`: `.jpg`, `.png` or `.webp`, at most 1.5 MB; drawn at 1920 x 1080.'],
   ['effects.wallpaperDim', 'num', [0, 0.9], 0.4, 'How far the wallpaper is darkened with the background colour.'],
 ];
@@ -213,12 +215,16 @@ function resolve(t, accent) {
   const panel = v['dock.panel'] > 0, pad = panel ? v['dock.panelPad'] : 0, dockH = v['dock.h'] + 2 * pad;
   const dockY = v['dock.y'] !== null ? v['dock.y'] : (dockBottom ? 68 : 360);
   const dockTop = dockBottom ? 1080 - dockY - dockH : dockY;   // where the dock's top is when the grid has no focus
-  const viewTop = overlay ? 0 : Math.min(v['grid.clipTop'], push ? Math.min(dockTop, v['grid.dockUp']) : dockY);
+  // dock.fill: the name's text box ends at shelf.y + its line height (92 px * scales * 1.05); the grown tile stops 28 px under it
+  const fillTo = v['shelf.show'] ? Math.round(v['shelf.y'] + 92 * v['type.scale'] * v['shelf.scale'] * 1.05) + 28 : Math.max(v['clock.y'] + 90, v['bar.y'] + v['bar.size'] + 24);
+  const fillS = v['dock.fill'] && !dockBottom && !overlay && dockTop > fillTo ? Math.min(1.8, Math.round((v['dock.h'] + dockTop - fillTo) / v['dock.h'] * 1000) / 1000) : 0;
+  const viewTop0 = overlay ? 0 : Math.min(v['grid.clipTop'], push ? Math.min(dockTop, v['grid.dockUp']) : dockY);
+  const viewTop = fillS ? Math.min(viewTop0, fillTo - 8) : viewTop0;
   const gridY = v['grid.y'] !== null ? v['grid.y'] : (overlay ? 290 : dockTop + dockH + 60);
   const dock = (dockBottom && overlay) ? place('bottom', v['dock.align'], v['dock.x'], dockY) : place('top', v['dock.align'], v['dock.x'], dockTop - viewTop);
   const clock = place(v['clock.anchor'], v['clock.align'], v['clock.x'], v['clock.y']), bar = place(v['bar.anchor'], v['bar.align'], v['bar.x'], v['bar.y']);
   const labels = v['bar.labels'] === 'auto' ? (v['bar.style'] === 'round' ? 'hide' : 'show') : v['bar.labels'];
-  const FONT = { default: '"LG Smart UI","Helvetica Neue",Helvetica,Arial,sans-serif', serif: 'Georgia,"Times New Roman",Times,serif', mono: 'Menlo,Consolas,"DejaVu Sans Mono",monospace' };
+  const FONT = { default: '"LG Smart UI","Helvetica Neue",Helvetica,Arial,sans-serif', serif: 'Georgia,"Times New Roman",Times,serif', mono: 'Menlo,Consolas,"DejaVu Sans Mono",monospace', helvetica: '"Sleek Sans","Helvetica Neue",Helvetica,Arial,sans-serif' };
   const vars = {
     '--night': v['colors.night'], '--night-rgb': night.join(','), '--panel': v['colors.panel'], '--panel2': mix(v['colors.panel'], v['colors.ink'], 0.06), '--ink': v['colors.ink'], '--ink2': 'rgba(' + ink.join(',') + ',.62)',
     '--acc': A, '--acc-ink': lum(A) > 0.35 ? '#0b0c10' : '#ffffff', '--focus': v['colors.focus'] || A, '--font': FONT[v['type.font']], '--fs': String(v['type.scale']),
@@ -228,7 +234,7 @@ function resolve(t, accent) {
     '--clock-d': v['clock.show'] ? 'flex' : 'none', '--date-d': v['clock.date'] ? 'block' : 'none', '--bar-l': bar.l, '--bar-r': bar.r, '--bar-t': bar.t, '--bar-b': bar.b, '--bar-tx': bar.tx, '--bar-d': v['bar.show'] ? 'flex' : 'none',
     '--name-d': v['shelf.show'] ? 'block' : 'none', '--name-x': px(v['shelf.x']), '--name-y': px(v['shelf.y']), '--name-a': v['shelf.align'], '--name-s': String(v['shelf.scale']),
     '--view-top': px(viewTop), '--dock-l': dock.l, '--dock-r': dock.r, '--dock-t': dock.t, '--dock-b': dock.b, '--dock-tx': dock.tx, '--dock-w': px(v['dock.w']), '--dock-h': px(v['dock.h']), '--dock-gap': px(v['dock.gap']), '--dock-rad': px(v['dock.radius']),
-    '--dock-panel': String(v['dock.panel']), '--dock-pad': px(pad), '--dock-lift': px(-v['dock.lift']), '--dock-fs': String(v['dock.focusScale']),
+    '--dock-panel': String(v['dock.panel']), '--dock-pad': px(pad), '--dock-lift': px(fillS ? 0 : -v['dock.lift']), '--dock-fs': String(fillS || v['dock.focusScale']), '--dock-origin': fillS ? '50% 100%' : '50% 50%', '--dock-spread': px(fillS ? Math.round(v['dock.w'] * (fillS - 1) / 2) : 0),
     '--cols': String(v['grid.cols']), '--tile-h': px(v['grid.tileH']), '--gap-x': px(v['grid.gapX']), '--gap-y': px(v['grid.gapY']), '--tile-r': px(v['grid.radius']), '--grid-l': px(v['grid.x']), '--grid-w': px(v['grid.width']),
     '--grid-t': px(gridY - viewTop), '--tile-w': px(Math.floor((v['grid.width'] - (v['grid.cols'] - 1) * v['grid.gapX']) / v['grid.cols'])), '--grid-fs': String(v['grid.focusScale']), '--ov-dim': String(v['grid.overlayDim']),
     '--gloss': String(v['tile.gloss']), '--tile-border': String(v['tile.border']), '--ring-w': px(v['tile.ringWidth']), '--ring-off': px(v['tile.ringOffset']), '--shadow': String(v['tile.shadow']), '--ink-rgb': ink.join(','),
@@ -238,7 +244,7 @@ function resolve(t, accent) {
   return {
     id: t.id, name: t.name, vars,
     attrs: { bar: v['bar.style'], labels, clock: v['clock.layout'], grid: mode, galign: v['grid.align'] },
-    cols: v['grid.cols'], tileH: v['grid.tileH'], gapY: v['grid.gapY'], gt: gridY - viewTop, viewH: 1080 - viewTop, dockN: v['dock.count'], overlay, push: push ? { up: Math.max(0, dockTop - v['grid.dockUp']), gridTop: gridY } : null, overlayH: v['grid.overlayH'],
+    cols: v['grid.cols'], tileH: v['grid.tileH'], gapY: v['grid.gapY'], gt: gridY - viewTop, viewH: 1080 - viewTop, dockN: v['dock.count'], overlay, push: push ? { up: Math.max(0, dockTop - v['grid.dockUp']), gridTop: gridY } : null, overlayH: v['grid.overlayH'], fill: !!fillS, dir: v['effects.direction'],
     glowRgb: v['effects.glowColor'] === 'accent' ? rgb(A).join(',') : '', nightRgb: night.join(','), wallpaper: w ? { id: t.id, file: w, dim: v['effects.wallpaperDim'] } : null,
   };
 }

@@ -1,0 +1,17 @@
+Sleek Sans (sleek-sans-regular.woff2, sleek-sans-bold.woff2)
+
+This is a modified version of TeX Gyre Heros 2.004 (regular and bold),
+Copyright (C) 2007-2018 Bogusław Jackowski and Janusz M. Nowacki,
+distributed under the GUST Font License (the LaTeX Project Public License,
+version 1.3c or later, with the GUST naming request).
+
+Changes from the original: the fonts were reduced to Latin characters
+(Basic Latin, Latin-1 Supplement, Latin Extended-A and a few punctuation
+marks), converted to WOFF2, and renamed "Sleek Sans", as the GUST Font
+License requests for derived works. This is not the original TeX Gyre Heros.
+
+The original fonts, their sources and the full licence are available from
+http://www.gust.org.pl/projects/e-foundry/tex-gyre/ and from CTAN
+(https://ctan.org/pkg/tex-gyre-heros).
+
+The LaTeX Project Public License: https://www.latex-project.org/lppl/

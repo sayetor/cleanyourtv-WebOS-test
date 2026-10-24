@@ -144,7 +144,7 @@ when the focus moves down into it (Back or Up closes it); a dock at the top leav
 | `surface.menuAlpha` | 0.5 to 1 | `0.97` | Opacity of the dark layer behind menus. |
 | `surface.rowRadius` | 0 to 50 | `30` | Corner radius of menu rows. |
 | **type** | | | |
-| `type.font` | `default`, `serif`, `mono` | `default` | The typeface: the TV's own, a serif or a monospace. |
+| `type.font` | `default`, `serif`, `mono`, `helvetica` | `default` | The typeface: the TV's own, a serif, a monospace or `helvetica` (Sleek Sans, a Helvetica-style font that comes with the launcher). |
 | `type.scale` | 0.8 to 1.3 | `1` | Scale of the text of buttons, menus and tiles. |
 | **clock** | | | |
 | `clock.show` | `true` or `false` | `true` | Show the clock. |
@@ -186,6 +186,7 @@ when the focus moves down into it (Back or Up closes it); a dock at the top leav
 | `dock.panelPad` | 0 to 60 | `24` | Space between the panel and the tiles, in px. |
 | `dock.lift` | 0 to 40 | `10` | How far the focused dock tile rises, in px. |
 | `dock.focusScale` | 1 to 1.3 | `1.05` | Scale of the focused dock tile. |
+| `dock.fill` | `true` or `false` | `false` | The focused dock tile grows from its bottom edge up to just under the app name, and the tiles beside it move aside; `dock.focusScale` and `dock.lift` are then not used. |
 | **grid** | | | |
 | `grid.mode` | `below`, `push`, `overlay` | `below` | `below`: the grid sits under the dock and scrolls (a dock at the bottom behaves as `push`); `push`: the grid sits under the dock out of sight, and when the focus moves down into it the dock moves up to `grid.dockUp` and the grid appears below it; `overlay`: the grid opens over the screen above the dock. |
 | `grid.dockUp` | 0 to 700 | `220` | `push` mode: where the dock stops, counted from the top of the screen, while the grid has the focus, in px. |
@@ -212,6 +213,7 @@ when the focus moves down into it (Back or Up closes it); a dock at the top leav
 | `effects.glow` | 0 to 1 | `1` | Strength of the ambient glow at the top. |
 | `effects.glowColor` | `app`, `accent` | `app` | `app`: taken from the focused icon; `accent`: the accent colour. |
 | `effects.speed` | 0 to 2 | `1` | Animation speed multiplier; 0 switches the animations off. |
+| `effects.direction` | 0 to 60 | `0` | Directional focus: the newly focused tile slides in this far, in px, from the side the focus came from, and the tile it left leans after it; 0 for none. |
 | `effects.wallpaper` | a file name | none | A file name in `themes/wallpapers/`: `.jpg`, `.png` or `.webp`, at most 1.5 MB; drawn at 1920 x 1080. |
 | `effects.wallpaperDim` | 0 to 0.9 | `0.4` | How far the wallpaper is darkened with the background colour. |
 <!-- schema:end -->

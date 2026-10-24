@@ -397,14 +397,15 @@ function setFocus(nr,nc,first){
 /* dock.fill: the dock tiles left and right of the focused one move aside to make room */
 function spread(){var d=rows[1]||[];for(var i=0;i<d.length;i++){var x=d[i];if(!x.classList.contains('tile'))return;x.classList.toggle('sl',TH.fill&&r===1&&i<c);x.classList.toggle('sr',TH.fill&&r===1&&i>c)}}
 /* effects.direction: the new tile starts offset toward the tile the focus came from (placed without animating), then grows and slides into
-   place; the tile it left leans after it for a moment. Only transforms change. */
+   place; the tile it left leans after it for a moment, except in a dock.fill dock, where it already moves aside (a lean there adds a
+   second nudge after that move). Only transforms change. */
 function raf2(f){requestAnimationFrame(function(){requestAnimationFrame(f)})}
 function motion(old,e,dx,dy){
   var d=TH.dir,isT=e.classList.contains('tile');
   if(isT){e.classList.add('jump');e.style.setProperty('--mx',(-dx*d)+'px');e.style.setProperty('--my',(-dy*d)+'px');
     raf2(function(){e.classList.remove('jump');e.style.removeProperty('--mx');e.style.removeProperty('--my');if(rows[r]&&rows[r][c]===e)e.classList.add('f')})}
   else e.classList.add('f');
-  if(old.classList.contains('tile')){old.style.setProperty('--mx',(dx*d*.4)+'px');old.style.setProperty('--my',(dy*d*.4)+'px');
+  if(old.classList.contains('tile')&&!(TH.fill&&(rows[1]||[]).indexOf(old)>=0)){old.style.setProperty('--mx',(dx*d*.4)+'px');old.style.setProperty('--my',(dy*d*.4)+'px');
     setTimeout(function(){old.style.removeProperty('--mx');old.style.removeProperty('--my')},110)}}
 function mapCol(from,to,col){return from>1?Math.round(col*(to-1)/(from-1)):0}
 function posOf(e){for(var i=0;i<rows.length;i++){var j=rows[i].indexOf(e);if(j>=0)return [i,j]}return null}

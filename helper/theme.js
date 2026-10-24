@@ -100,7 +100,7 @@ const SCHEMA = [
   ['effects.glow', 'num', [0, 1], 1, 'Strength of the ambient glow at the top.'],
   ['effects.glowColor', 'enum', ['app', 'accent'], 'app', '`app`: taken from the focused icon; `accent`: the accent colour.'],
   ['effects.speed', 'num', [0, 2], 1, 'Animation speed multiplier; 0 switches the animations off.'],
-  ['effects.direction', 'int', [0, 60], 0, 'Directional focus: the newly focused tile slides in this far, in px, from the side the focus came from, and the tile it left leans after it; 0 for none.'],
+  ['effects.direction', 'int', [0, 60], 0, 'Directional focus: the newly focused tile slides in this far, in px, from the side the focus came from, and the tile it left leans after it (not in a `dock.fill` dock, where it moves aside instead); 0 for none.'],
   ['effects.wallpaper', 'file', null, '', 'A file name in `themes/wallpapers/`: `.jpg`, `.png` or `.webp`, at most 1.5 MB; drawn at 1920 x 1080.'],
   ['effects.wallpaperDim', 'num', [0, 0.9], 0.4, 'How far the wallpaper is darkened with the background colour.'],
 ];

@@ -213,7 +213,7 @@ when the focus moves down into it (Back or Up closes it); a dock at the top leav
 | `effects.glow` | 0 to 1 | `1` | Strength of the ambient glow at the top. |
 | `effects.glowColor` | `app`, `accent` | `app` | `app`: taken from the focused icon; `accent`: the accent colour. |
 | `effects.speed` | 0 to 2 | `1` | Animation speed multiplier; 0 switches the animations off. |
-| `effects.direction` | 0 to 60 | `0` | Directional focus: the newly focused tile slides in this far, in px, from the side the focus came from, and the tile it left leans after it; 0 for none. |
+| `effects.direction` | 0 to 60 | `0` | Directional focus: the newly focused tile slides in this far, in px, from the side the focus came from, and the tile it left leans after it (not in a `dock.fill` dock, where it moves aside instead); 0 for none. |
 | `effects.wallpaper` | a file name | none | A file name in `themes/wallpapers/`: `.jpg`, `.png` or `.webp`, at most 1.5 MB; drawn at 1920 x 1080. |
 | `effects.wallpaperDim` | 0 to 0.9 | `0.4` | How far the wallpaper is darkened with the background colour. |
 <!-- schema:end -->
